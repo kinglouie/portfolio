@@ -56,10 +56,10 @@
         box-shadow: none !important;
     }
     .portfolio-item.card {
-        max-height: 200px;
+        /* max-height: 200px; */
     }
     .portfolio-item .logo img {
-        width: 50%;
+        width: 40%;
         max-width: 350px;
     }
 </style>

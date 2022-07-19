@@ -15,7 +15,7 @@ export interface CrossfadeParams {
 
 type ElementMap = Map<any, { node: Element }>;
 
-export function crossfade({ fallback, ...defaults }: CrossfadeParams & {
+export function flipToPage({ fallback, ...defaults }: CrossfadeParams & {
 	fallback?: (node: Element, params: CrossfadeParams, intro: boolean) => TransitionConfig;
 }): [
   (
@@ -34,7 +34,8 @@ export function crossfade({ fallback, ...defaults }: CrossfadeParams & {
 	const to_receive: ElementMap = new Map();
 	const to_send: ElementMap = new Map();
 
-	function crossfade(from_node: Element, node: Element, params: CrossfadeParams): TransitionConfig {
+	function flipToPage(from_node: Element, node: Element, params: CrossfadeParams): TransitionConfig {
+		console.log('flipToPage')
 		const {
 			delay = 0,
 			duration = d => Math.sqrt(d) * 30,
@@ -48,7 +49,7 @@ export function crossfade({ fallback, ...defaults }: CrossfadeParams & {
 
         // set the final state (page)
 		gsap.set(node, {clearProps: true}); // wipe out all inline stuff so it's in the native state (not scaled)
-		gsap.set(node, { top: 0, left: '50%', visibility: "visible", overflow: "hidden"});
+		gsap.set(node, { top: 0, left: '50%', overflow: "hidden"});
 
         const tl = Flip.from(state, {
 			ease: "power2.inOut",
@@ -58,10 +59,38 @@ export function crossfade({ fallback, ...defaults }: CrossfadeParams & {
 
 		return {
 			delay,
-			duration: 2000,
+			duration: duration,
 			easing,
 			tick: t => {
 				tl.progress(t);
+			}
+		};
+	}
+
+	function flipToCard(from_node: Element, node: Element, params: CrossfadeParams): TransitionConfig {
+		console.log('flipToCard')
+
+		const {
+			delay = 0,
+			duration = d => Math.sqrt(d) * 30,
+			easing = cubicOut
+		} = assign(assign({}, defaults), params);
+
+		gsap.set(from_node, {overflow: "hidden"});
+        // record the from state (detail)
+		const state = Flip.getState(from_node);
+		Flip.fit(from_node, node, {scale: false});
+    
+        const tl = Flip.from(state, {
+			ease: "power2.inOut",
+		})
+
+		return {
+			delay,
+			duration,
+			easing,
+			tick: t => {
+				tl.progress(1-t);
 			}
 		};
 	}
@@ -71,11 +100,16 @@ export function crossfade({ fallback, ...defaults }: CrossfadeParams & {
 			items.set(params.key, { node });
 
 			return () => {
-				if (counterparts.has(params.key) && node.classList.contains('page')) {
+				if (counterparts.has(params.key)) {
 					const from_node = counterparts.get(params.key).node;
 					counterparts.delete(params.key);
 
-					return crossfade(from_node, node, params);
+					if(node.classList.contains('page') && intro)
+						return flipToPage(from_node, node, params);
+					else if(from_node.classList.contains('card') && !intro)
+						return flipToCard(node, from_node, params);
+					else 
+						return fallback;
 				}
 
 				// if the node is disappearing altogether
