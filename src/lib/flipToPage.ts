@@ -82,7 +82,7 @@ export function flipToPage({ fallback, ...defaults }: CrossfadeParams & {
 		Flip.fit(from_node, node, {scale: false});
     
         const tl = Flip.from(state, {
-			ease: "power2.inOut",
+			
 		})
 
 		return {
@@ -103,13 +103,15 @@ export function flipToPage({ fallback, ...defaults }: CrossfadeParams & {
 				if (counterparts.has(params.key)) {
 					const from_node = counterparts.get(params.key).node;
 					counterparts.delete(params.key);
-
-					if(node.classList.contains('page') && intro)
+					if(node.classList.contains('page') && intro) {
 						return flipToPage(from_node, node, params);
-					else if(from_node.classList.contains('card') && !intro)
+					} 
+					else if(from_node.classList.contains('card') && !intro) {
 						return flipToCard(node, from_node, params);
-					else 
-						return fallback;
+					} 
+					else {
+						return fallback && fallback(node, {duration: 0}, intro);
+					}
 				}
 
 				// if the node is disappearing altogether

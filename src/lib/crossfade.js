@@ -1,15 +1,16 @@
-import { quintOut } from 'svelte/easing';
+import { quintInOut } from 'svelte/easing';
 import { flipToPage } from '$lib/flipToPage.ts';
+
 const [send, receive] = flipToPage({
-    easing: quintOut,
-    duration: 2000,
+    easing: quintInOut,
+    duration: 2500,
 
     fallback(node, params) {
         const style = getComputedStyle(node);
 
         return {
-            duration: 2000,
-            easing: quintOut,
+            duration: params.duration,
+            easing: quintInOut,
             css: t => `
                 opacity: ${t}
             `
