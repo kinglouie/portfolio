@@ -15,7 +15,6 @@
     "@sveltejs/adapter-node": "^1.0.0-next.81",
     "@sveltejs/adapter-static": "^1.0.0-next.36",
     "@sveltejs/kit": "next",
-    "@types/gsap": "^3.0.0",
     "@types/marked": "^4.0.3",
     "autoprefixer": "^10.4.7",
     "gsap": "^3.10.4",
