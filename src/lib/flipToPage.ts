@@ -2,8 +2,8 @@
 import { cubicOut, cubicInOut, linear } from 'svelte/easing';
 import type { EasingFunction, TransitionConfig } from 'svelte/transition';
 import { assign, is_function } from 'svelte/internal';
-import gsap  from "gsap";
-import { Flip } from "gsap/dist/Flip";
+import { gsap }  from "gsap";
+import { Flip } from "gsap/dist/Flip.js";
 
 gsap.registerPlugin(Flip);
 
