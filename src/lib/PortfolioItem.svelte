@@ -7,7 +7,6 @@
     export let item : any;
     export let show = 'page'; // alt is card
     let description = item.attributes.description;
-    console.log(item)
 
     onMount(async () => {
         // Install the marked package first!
@@ -70,7 +69,6 @@
         width: 100%;
         height: 100%;
         left: 50%;
-        top: 0;
         transform: translateX(-50%);
         z-index: 5;
     }

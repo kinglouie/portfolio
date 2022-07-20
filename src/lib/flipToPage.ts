@@ -95,6 +95,45 @@ export function flipToPage({ fallback, ...defaults }: CrossfadeParams & {
 		};
 	}
 
+	function flipToPageBuddy(node, params) {
+		console.log('flipToPageBuddy')
+		const duration = params.duration
+		return {
+			delay: 2400,
+			duration: 100,
+			css: t => `
+              opacity: ${t}
+          	`
+		};
+	}
+
+	function flipToCardBuddy(node, params) {
+		console.log('flipToCardBuddy')
+		const duration = params.duration
+		console.log(duration)
+		return {
+			delay: 2400,
+			duration: 100,
+			css: t => `
+              opacity: ${t}
+          	`
+		};
+	}
+
+	function fadeHalf(node, params) {
+		console.log('flipToCardBuddy')
+		const duration = params.duration
+		console.log(duration)
+		return {
+			delay: 0,
+			duration: 3000,
+			css: t => `
+              opacity: ${(t/2)}
+          	`
+		};
+	}
+
+
 	function transition(items: ElementMap, counterparts: ElementMap, intro: boolean) {
 		return (node: Element, params: CrossfadeParams & { key: any }) => {
 			items.set(params.key, { node });
@@ -103,14 +142,18 @@ export function flipToPage({ fallback, ...defaults }: CrossfadeParams & {
 				if (counterparts.has(params.key)) {
 					const from_node = counterparts.get(params.key).node;
 					counterparts.delete(params.key);
+					console.log(params)
 					if(node.classList.contains('page') && intro) {
 						return flipToPage(from_node, node, params);
 					} 
 					else if(from_node.classList.contains('card') && !intro) {
 						return flipToCard(node, from_node, params);
 					} 
-					else {
-						return fallback && fallback(node, {duration: 0}, intro);
+					else if (node.classList.contains('card') && intro) {
+						return flipToCardBuddy && flipToCardBuddy(from_node, params);
+					}
+					else if (from_node.classList.contains('page') && !intro) {
+						return flipToPageBuddy && flipToPageBuddy(from_node, params);
 					}
 				}
 
@@ -118,7 +161,7 @@ export function flipToPage({ fallback, ...defaults }: CrossfadeParams & {
 				// (i.e. wasn't claimed by the other list)
 				// then we need to supply an outro
 				items.delete(params.key);
-				return fallback && fallback(node, params, intro);
+				return fadeHalf && fadeHalf(node, params);
 			};
 		};
 	}
