@@ -1,38 +1,28 @@
-<script>
+<script lang="ts">
 	import { page } from '$app/stores';
+	import { fade, fly } from 'svelte/transition';
 	import logo from './svelte-logo.svg';
+
 </script>
 
-<header>
-	<div class="logo">
-		<a href="https://kit.svelte.dev">
-			<img src={logo} alt="SvelteKit" />
-		</a>
-	</div>
 
-	<nav>
-		<ul>
-			<li class:active={$page.url.pathname === '/'}><a sveltekit:prefetch href="/">Home</a></li>
-			<li class:active={$page.url.pathname === '/portfolio'}>
-				<a sveltekit:prefetch href="/portfolio">portfolio</a>
-			</li>
-		</ul>
-	</nav>
-</header>
+<div class="logo">
+	<a href="https://kit.svelte.dev">
+		<img src={logo} alt="SvelteKit" />
+	</a>
+</div>
+
+<nav>
+	<ul>
+		<li class:active={$page.url.pathname === '/'}><a sveltekit:prefetch href="/">Home</a></li>
+		<li class:active={$page.url.pathname === '/portfolio'}>
+			<a sveltekit:prefetch href="/portfolio">portfolio</a>
+		</li>
+	</ul>
+</nav>
+
 
 <style>
-	header {
-		position: sticky;
-		top: 0;
-		left: 0;
-		width: 100%;
-		z-index: 100;
-		backdrop-filter: blur(5px);
-		display: flex;
-		justify-content: space-between;
-		--background: rgba(255, 255, 255, 0.8);
-		background: var(--background);
-	}
 
 	.logo a {
 		display: flex;

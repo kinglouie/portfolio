@@ -68,6 +68,7 @@
         position: fixed;
         width: 100%;
         height: 100%;
+        top: var(--header-height);
         left: 50%;
         transform: translateX(-50%);
         z-index: 5;

@@ -6,4 +6,6 @@
     export let item: any;
 </script>
 
-<PortfolioItem item={item} />
+<div class="container mx-auto">
+    <PortfolioItem item={item} />
+</div>
