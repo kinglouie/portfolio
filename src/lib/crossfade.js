@@ -1,5 +1,5 @@
 import { quintInOut } from 'svelte/easing';
-import { flipToPage } from '$lib/flipToPage.ts';
+import { flipToPage } from '$lib/flipToPage2.ts';
 
 const [send, receive] = flipToPage({
     easing: quintInOut,

@@ -35,62 +35,84 @@ export function flipToPage({ fallback, ...defaults }: CrossfadeParams & {
 	const to_send: ElementMap = new Map();
 
 	function flipToPage(from_node: Element, node: Element, params: CrossfadeParams): TransitionConfig {
-		console.log('flipToPage')
-		const {
-			delay = 0,
-			duration = d => Math.sqrt(d) * 30,
-			easing = cubicOut
-		} = assign(assign({}, defaults), params);
-
-
-        // record the from state (card)
-        Flip.fit(node, from_node, {scale: false});
-		const state = Flip.getState(node);
-
-        // set the final state (page)
-		gsap.set(node, {clearProps: true}); // wipe out all inline stuff so it's in the native state (not scaled)
-		gsap.set(node, { top: 0, left: '50%', overflow: "hidden"});
-
-        const tl = Flip.from(state, {
-			ease: "power2.inOut",
-			scale: false,
-			onComplete: () => gsap.set(node, {overflow: "auto"}) // to permit scrolling if necessary
-		})
-		console.log(tl)
-
-		return {
-			delay,
-			duration,
-			easing,
-			tick: t => {
-				tl.progress(t);
-			}
-		};
-	}
-
-	function flipToCard(from_node: Element, node: Element, params: CrossfadeParams): TransitionConfig {
-		console.log('flipToCard')
+		console.log('flipToPageNative -> node is animated')
+		// console.log(node)
 		
 		const {
 			delay = 0,
 			duration = d => Math.sqrt(d) * 30,
 			easing = cubicOut
 		} = assign(assign({}, defaults), params);
-		gsap.set(from_node, {overflow: "hidden"});
-        // record the from state (detail)
-		const state = Flip.getState(from_node);
-		Flip.fit(from_node, node, {scale: false, absolute: true });
-    
-        const tl = Flip.from(state, {
-			
-		})
+
+		const style = getComputedStyle(node);
+		const from = from_node.getBoundingClientRect();
+		const to = node.getBoundingClientRect();
+		const transform = style.transform === 'none' ? '' : style.transform;
+
+		const dx = (from.left - to.left);
+		const dy = (from.top - to.top);
 
 		return {
 			delay,
 			duration,
 			easing,
-			tick: t => {
-				tl.progress(1-t);
+			css: (t, u) => {
+				const x = u * dx;
+				const y = u * dy;
+				const sx = from.width + t * (to.width - from.width);
+				const sy = from.height + t * (to.height - from.height);
+	
+				return `transform: ${transform} translate(${x}px, ${y}px);width: ${sx}px;height: ${sy}px;`;
+			}
+		};
+	}
+
+	function flipToCard(from_node: Element, node: Element, params: CrossfadeParams): TransitionConfig {
+		console.log('flipToCardNative -> from_node is animated')
+		console.log(from_node)
+
+		const {
+			delay = 0,
+			duration = d => Math.sqrt(d) * 30,
+			easing = cubicOut
+		} = assign(assign({}, defaults), params);
+
+		let from = from_node.getBoundingClientRect();
+		const to = node.getBoundingClientRect();
+
+		// Reposition from node to absolute and move it on the same spot as in fixed position
+		from_node.style.overflow = 'hidden';
+		from_node.style.position = 'absolute';
+		from_node.style.top = '0';
+		from_node.style.left = '0';
+
+		const tmp_style = getComputedStyle(from_node);
+		const tmp_transform = tmp_style.transform === 'none' ? '' : tmp_style.transform;
+		const x_off = parseFloat(tmp_transform.match(/(-?[0-9\.]+)/g)[4]);
+		const tmp = from_node.getBoundingClientRect();
+		const tdx = from.left - tmp.left + x_off;
+		const tdy = from.top - tmp.top;
+		from_node.style.transform = `translate(${tdx}px, ${tdy}px)`;
+		// debugger;
+
+		// calculate from absolute to target
+		from = from_node.getBoundingClientRect();
+		const style = getComputedStyle(from_node);
+		const transform = style.transform === 'none' ? '' : style.transform;
+		const dx = to.left - from.left;
+		const dy = to.top - from.top;
+
+		return {
+			delay,
+			duration,
+			easing,
+			css: (t, u) => {
+				const x = u * dx;
+				const y = u * dy;
+				const sx = from.width + u * (to.width - from.width);
+				const sy = from.height + u * (to.height - from.height);
+	
+				return `transform: ${transform} translate(${x}px, ${y}px);width: ${sx}px;height: ${sy}px;`;
 			}
 		};
 	}
