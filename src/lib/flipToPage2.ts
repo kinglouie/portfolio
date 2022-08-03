@@ -64,7 +64,10 @@ export function flipToPage({ fallback, ...defaults }: CrossfadeParams & {
 			tick: (t) => {
 				if(t==1) {
 					window.scrollTo(0, 0);
-					node.style.position = 'absolute';
+					window.setTimeout(()=>{
+						node.style.position = 'absolute';
+					},50);
+					
 				}
 			},
 			css: (t, u) => {
