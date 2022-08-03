@@ -22,7 +22,7 @@
 
 
 <div 
-    class="portfolio-item container {show === 'page' ? 'page' : 'card'}"
+    class="portfolio-item container px-0 {show === 'page' ? 'page' : 'card'}"
     in:receive="{{key: item.id}}"
     out:send="{{key: item.id}}"
 >
