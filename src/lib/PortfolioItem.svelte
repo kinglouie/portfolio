@@ -31,7 +31,7 @@
             <img src="http://strapi.moon-toon.de{item.attributes.logoImage.data.attributes.url}" alt="{item.title}">
         </div>
         {#if show=='page'}
-            <h1 class="title text-9xl absolute top-1/2 -translate-y-1/2 whitespace-nowrap" style="color:{item.attributes.foregroundColor}" in:fly="{{ x: 200, duration: 2000, delay: 600 }}" out:fade="{{delay: 1200}}">{item.attributes.title}</h1>
+            <h1 class="title text-9xl absolute top-1/2 -translate-y-1/2 whitespace-nowrap" style="color:{item.attributes.foregroundColor}" in:fly="{{ x: 200, duration: 2000, delay: 600 }}" out:fly="{{ x: 5, duration: 500, delay: 200 }}">{item.attributes.title}</h1>
         {/if}
         <div class="background absolute inset-0">
             <img class="mx-auto h-full w-full object-cover" src="http://strapi.moon-toon.de{item.attributes.logoBackgroundImage.data.attributes.url}" alt="{item.title}">
@@ -65,7 +65,7 @@
     /* detail page */
 
     .portfolio-item.page {
-        position: fixed;
+        position: absolute;
         width: 100%;
         height: 100%;
         top: var(--header-height);

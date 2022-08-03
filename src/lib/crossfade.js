@@ -3,7 +3,7 @@ import { flipToPage } from '$lib/flipToPage2.ts';
 
 const [send, receive] = flipToPage({
     easing: quintInOut,
-    duration: 2500,
+    duration: 1500,
 
     fallback(node, params) {
         const style = getComputedStyle(node);

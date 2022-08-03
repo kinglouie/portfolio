@@ -2,10 +2,10 @@
 import { cubicOut, cubicInOut, linear } from 'svelte/easing';
 import type { EasingFunction, TransitionConfig } from 'svelte/transition';
 import { assign, is_function } from 'svelte/internal';
-import { gsap }  from "gsap";
-import { Flip } from "gsap/dist/Flip.js";
+// import { gsap }  from "gsap";
+// import ScrollToPlugin from "gsap/dist/ScrollToPlugin";
 
-gsap.registerPlugin(Flip);
+// gsap.registerPlugin(ScrollToPlugin);
 
 export interface CrossfadeParams {
 	delay?: number;
@@ -44,6 +44,11 @@ export function flipToPage({ fallback, ...defaults }: CrossfadeParams & {
 			easing = cubicOut
 		} = assign(assign({}, defaults), params);
 
+		node.style.position = 'fixed';
+		const border_radius = parseInt(getComputedStyle(from_node).borderRadius);
+		node.style.borderRadius = border_radius+'px';
+		console.log(node.style.borderRadius)
+
 		const style = getComputedStyle(node);
 		const from = from_node.getBoundingClientRect();
 		const to = node.getBoundingClientRect();
@@ -56,13 +61,20 @@ export function flipToPage({ fallback, ...defaults }: CrossfadeParams & {
 			delay,
 			duration,
 			easing,
+			tick: (t) => {
+				if(t==1) {
+					window.scrollTo(0, 0);
+					node.style.position = 'absolute';
+				}
+			},
 			css: (t, u) => {
+				const br = u * border_radius;
 				const x = u * dx;
 				const y = u * dy;
 				const sx = from.width + t * (to.width - from.width);
 				const sy = from.height + t * (to.height - from.height);
 	
-				return `transform: ${transform} translate(${x}px, ${y}px);width: ${sx}px;height: ${sy}px;`;
+				return `transform: ${transform} translate(${x}px, ${y}px);width: ${sx}px;height: ${sy}px;border-radius: ${br}px`;
 			}
 		};
 	}
@@ -71,11 +83,24 @@ export function flipToPage({ fallback, ...defaults }: CrossfadeParams & {
 		console.log('flipToCardNative -> from_node is animated')
 		console.log(from_node)
 
+		let delay = 0;
 		const {
-			delay = 0,
 			duration = d => Math.sqrt(d) * 30,
 			easing = cubicOut
 		} = assign(assign({}, defaults), params);
+
+		// if(window.scrollY > 0) {
+		// 	let tl = gsap.timeline({
+		// 		onComplete: function(){ 
+		// 			from_node.style.position = 'fixed';
+		// 		}
+		// 	});
+		// 	tl.to(window, {duration: 1, scrollTo: from_node});
+		// 	delay = 1000;
+		// } else {
+		// 	from_node.style.position = 'fixed';
+		// }
+		from_node.style.position = 'fixed';
 
 		let from = from_node.getBoundingClientRect();
 		const to = node.getBoundingClientRect();
@@ -145,7 +170,7 @@ export function flipToPage({ fallback, ...defaults }: CrossfadeParams & {
 		} = assign(assign({}, defaults), params);
 
 		return {
-			delay: duration,
+			delay: (duration-100),
 			duration: 100,
 			css: t => `
               opacity: ${(t)}
