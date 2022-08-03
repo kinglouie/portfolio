@@ -34,11 +34,11 @@
             <h1 class="title text-9xl absolute top-1/2 -translate-y-1/2 whitespace-nowrap" style="color:{item.attributes.foregroundColor}" in:fly="{{ x: 200, duration: 2000, delay: 600 }}" out:fly="{{ x: 5, duration: 500, delay: 200 }}">{item.attributes.title}</h1>
         {/if}
         <div class="background absolute inset-0">
-            <img class="mx-auto h-full w-full object-cover" src="http://strapi.moon-toon.de{item.attributes.logoBackgroundImage.data.attributes.url}" alt="{item.title}">
+            <img class="mx-auto h-full w-full object-cover" src="https://strapi.moon-toon.de{item.attributes.logoBackgroundImage.data.attributes.url}" alt="{item.title}">
         </div>
     </div>
     {#if show=='page'}
-        <div class="content relative grid grid-cols-2" in:fly="{{ y: -100, duration: 1200, delay: 1200 }}" out:fly="{{ y: -20, duration: 600, delay: 200 }}">
+        <div class="content relative grid md:grid-cols-2" in:fly="{{ y: -100, duration: 1200, delay: 1200 }}" out:fly="{{ y: -20, duration: 600, delay: 200 }}">
             <div class="card rounded-md shadow-md">
                 <p class="text-4xl mb-6" in:fly="{{ x: 200, duration: 2000, delay: 600 }}" out:fade="{{delay: 1200}}">{item.attributes.title}</p>
                 <p>{item.attributes.subtitle}</p>
@@ -68,10 +68,15 @@
         position: absolute;
         width: 100%;
         height: 100%;
-        top: var(--header-height);
+        top:0;
         left: 50%;
         transform: translateX(-50%);
         z-index: 5;
+    }
+    @screen sm {
+        .portfolio-item.page {
+            top: var(--header-height);
+        }
     }
     
     .portfolio-item.page .header {
