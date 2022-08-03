@@ -67,7 +67,7 @@
     .portfolio-item.page {
         position: absolute;
         width: 100%;
-        height: 100%;
+        height: auto;
         top:0;
         left: 50%;
         transform: translateX(-50%);
@@ -76,6 +76,7 @@
     @screen sm {
         .portfolio-item.page {
             top: var(--header-height);
+
         }
     }
     
